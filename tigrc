@@ -1,0 +1,15 @@
+# global
+set line-graphics = yes
+
+# color
+color default           white   black
+color cursor            default magenta
+color date              cyan    default
+color delimiter         cyan    default
+color line-number       yellow  default
+color diff-header       yellow  default
+color diff-index        blue    default
+color diff-chunk        magenta default
+color "Reported-by:"    green   default
+color graph-commit      cyan    default
+color status            white   default
