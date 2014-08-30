@@ -1,7 +1,16 @@
 #!/bin/bash
 RC_HOME=`pwd`
+SYSTEM=`uname -s`
+
+# do not install tigrc on Linux
+if [ $SYSTEM == "Darwin" ]; then
+    RC="zshrc tmux.conf tigrc"
+else
+    RC="zshrc tmux.conf"
+fi
 cd ..
-for TARGET in zshrc tmux.conf tigrc;
+
+for TARGET in $RC
 do
    if [ -e ".$TARGET" ] && [ ! -L ".$TARGET" ]; then
       mv ".$TARGET" ".$TARGET.old"
@@ -11,6 +20,7 @@ do
       ln -s "$RC_HOME/$TARGET" ".$TARGET"
    fi
 done
+
 if [[ "$SHELL" =~ .*/zsh ]]
 then
    echo "Good. You are using $SHELL. No need to chsh." 
