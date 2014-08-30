@@ -46,24 +46,24 @@ export EDITOR=vim
 # reverse-menu-complete key binding
 bindkey '^[[Z' reverse-menu-complete
 
-# HISTORY
+### HISTORY
 # search
 source $ZSH/plugins/history-substring-search/history-substring-search.zsh
 # number of lines kept in history
 export HISTSIZE=10000
-# # number of lines saved in the history after logout
+# number of lines saved in the history after logout
 export SAVEHIST=10000
-# # location of history
+# location of history
 export HISTFILE=~/.zhistory
-# # append command to history file once executed
+# append command to history file once executed
 setopt APPEND_HISTORY
 
-# alias
+### Alias
 alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
 # tmux 256 color
-alias -g tmux='tmux -2'
+alias -g tmux2='tmux -2'
 # vim
 alias -g vi='vim'
 
