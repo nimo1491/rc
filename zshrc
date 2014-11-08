@@ -37,7 +37,7 @@ plugins=(osx brew python tmux ssh-agent autojump coffee jsontools vagrant gitfas
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin
 
 # vi key binding
 bindkey '^R' history-incremental-search-backward
@@ -57,6 +57,9 @@ export SAVEHIST=10000
 export HISTFILE=~/.zhistory
 # append command to history file once executed
 setopt APPEND_HISTORY
+
+# pager
+export PAGER=cat
 
 ### Alias
 alias -g ...='../..'
