@@ -41,6 +41,8 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$HOME/bin:
 
 # vi key binding
 bindkey '^R' history-incremental-search-backward
+bindkey -rM vicmd 'v'
+bindkey -M vicmd '^v' edit-command-line
 export EDITOR=vim
 
 # reverse-menu-complete key binding
