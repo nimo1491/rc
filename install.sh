@@ -4,21 +4,27 @@ SYSTEM=`uname -s`
 
 # do not install tigrc on Linux
 if [ $SYSTEM == "Darwin" ]; then
-    RC="zshrc tmux.conf tigrc"
+    RC="tmux.conf tigrc"
 else
-    RC="zshrc tmux.conf"
+    RC="tmux.conf"
 fi
 cd ..
 
-for TARGET in $RC
+for target in $RC
 do
-   if [ -e ".$TARGET" ] && [ ! -L ".$TARGET" ]; then
-      mv ".$TARGET" ".$TARGET.old"
+   if [ -e ".$target" ] && [ ! -L ".$target" ]; then
+      mv ".$target" ".$target.old"
       echo
    fi
-   if [ ! -L ".$TARGET" ]; then
-      ln -s "$RC_HOME/$TARGET" ".$TARGET"
+   if [ ! -L ".$target" ]; then
+      ln -s "$RC_HOME/$target" ".$target"
    fi
+done
+
+# prezto
+for rcfile in $RC_HOME/prezto/*; do
+    rcRel=${rcfile##*/}
+    ln -s $rcfile ".$rcRel"  
 done
 
 if [[ "$SHELL" =~ .*/zsh ]]
@@ -28,6 +34,3 @@ else
    echo "Please change your shell to `which zsh`"
    chsh
 fi
-
-cd $RC_HOME
-git submodule update --init

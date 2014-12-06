@@ -1,0 +1,25 @@
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
+
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+# Customize to your needs...
+
+# vi key binding
+bindkey '^R' history-incremental-search-backward
+bindkey -rM vicmd 'v'
+bindkey -M vicmd '^v' edit-command-line
+
+# reverse-menu-complete key binding
+bindkey '^[[Z' reverse-menu-complete
+
+# Alias
+alias -g tmux2='tmux -2'    # tmux 256 color
+alias -g vi='vim'           # vim
