@@ -6,7 +6,7 @@ SYSTEM=`uname -s`
 if [ $SYSTEM == "Darwin" ]; then
     RC="tmux.conf tigrc"
 else
-    RC="tmux.conf"
+    RC="tmux.conf tigrc"
 fi
 cd ..
 
