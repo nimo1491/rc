@@ -24,3 +24,6 @@ bindkey '^[[Z' reverse-menu-complete
 alias -g tmux2='tmux -2'    # tmux 256 color
 alias -g vi='vim'           # vim
 alias -g tiga='tig --all'   # tig all branches
+
+export NVM_DIR="/Users/nimo/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
