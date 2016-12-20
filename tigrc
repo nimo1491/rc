@@ -102,7 +102,7 @@ set main-view	    = line-number:no,interval=5 id:yes date:default author:full co
 # Misc
 #set refresh-mode		    = auto		# Enum: manual, auto, after-command, periodic
 #set refresh-interval		= 10		# Interval in seconds between refreshes
-#set ignore-case			= no		# Ignore case when searching?
+set ignore-case			    = yes		# Ignore case when searching?
 #set focus-child			= yes		# Move focus to child view when opened?
 #set horizontal-scroll		= 50%		# Number of columns to scroll as % of width
 #set split-view-height		= 67%		# Height of the bottom view for horizontal splits
