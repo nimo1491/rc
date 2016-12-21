@@ -25,5 +25,16 @@ alias -g tmux2='tmux -2'    # tmux 256 color
 alias -g vi='vim'           # vim
 alias -g tiga='tig --all'   # tig all branches
 
+# fasd
+fasd_cache="$HOME/.fasd-init-zsh"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
+
+alias v='f -e vim'
+
+# nvm
 export NVM_DIR="/Users/nimo/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
