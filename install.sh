@@ -28,12 +28,6 @@ for rcfile in $RC_HOME/prezto/*; do
     ln -s $rcfile ".$rcRel"
 done
 
-# bin
-for binfile in $RC_HOME/bin/*; do
-    binRel=${binfile##*/}
-    ln -s $binfile "/usr/local/bin/$binRel"
-done
-
 # install tmux plugins
 ~/.tmux/plugins/tpm/bin/install_plugins
 
