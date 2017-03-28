@@ -10,6 +10,7 @@ else
 fi
 cd ..
 
+# other than zsh
 for target in $RC
 do
    if [ -e ".$target" ] && [ ! -L ".$target" ]; then
@@ -24,12 +25,21 @@ done
 # prezto
 for rcfile in $RC_HOME/prezto/*; do
     rcRel=${rcfile##*/}
-    ln -s $rcfile ".$rcRel"  
+    ln -s $rcfile ".$rcRel"
 done
+
+# bin
+for binfile in $RC_HOME/bin/*; do
+    binRel=${binfile##*/}
+    ln -s $binfile "/usr/local/bin/$binRel"
+done
+
+# install tmux plugins
+~/.tmux/plugins/tpm/bin/install_plugins
 
 if [[ "$SHELL" =~ .*/zsh ]]
 then
-   echo "Good. You are using $SHELL. No need to chsh." 
+   echo "Good. You are using $SHELL. No need to chsh."
 else
    echo "Please change your shell to `which zsh`"
    chsh
