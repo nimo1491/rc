@@ -117,8 +117,8 @@ function prompt_nimo_setup {
 
   # Set editor-info parameters.
   zstyle ':prezto:module:editor:info:completing' format '%B%F{red}...%f%b '
-  zstyle ':prezto:module:editor:info:keymap:primary' format '%B%F{blue}※%f%b '
-  zstyle ':prezto:module:editor:info:keymap:alternate' format '%B%F{red}※%f%b '
+  zstyle ':prezto:module:editor:info:keymap:primary' format '%B%F{blue}☼%f%b '
+  zstyle ':prezto:module:editor:info:keymap:alternate' format '%B%F{red}☼%f%b '
 
   # Set git-info parameters.
   zstyle ':prezto:module:git:info' verbose 'yes'
