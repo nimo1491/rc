@@ -39,7 +39,7 @@ fi
   done
 
   # Install Spaceship theme
-  curl -o -https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/install.sh | zsh
+  curl -o - https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/install.sh | zsh
 
   # Install tmux plugins
   ${TMUX_PLUGINS_DIR}/tpm/bin/install_plugins

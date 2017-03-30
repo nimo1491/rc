@@ -3,22 +3,22 @@
 # Uninstall all files except .rc
 
 # prezto
-rm -rf .zcompdump
-rm -rf .zcompdump.zwc
-rm -rf .zlogin
-rm -rf .zlogout
-rm -rf .zprezto/
-rm -rf .zpreztorc
-rm -rf .zprofile
-rm -rf .zshenv
-rm -rf .zshrc
+[[ -e .zcompdump ]] && rm -rf .zcompdump
+[[ -e .zcompdump.zwc ]] && rm -rf .zcompdump.zwc
+[[ -e .zlogin ]] && rm -rf .zlogin
+[[ -e .zlogout ]] && rm -rf .zlogout
+[[ -d .zprezto ]] && rm -rf .zprezto/
+[[ -e .zpreztorc ]] && rm -rf .zpreztorc
+[[ -e .zprofile ]] && rm -rf .zprofile
+[[ -e .zshenv ]] && rm -rf .zshenv
+[[ -e .zshrc ]] && rm -rf .zshrc
 
 # tmux
-rm -rf .tmux/
-rm -rf .tmux.conf
+[[ -d .tmux/ ]] && rm -rf .tmux/
+[[ -e .tmux.conf ]] && rm -rf .tmux.conf
 
 # tig
-rm -rf .tigrc
+[[ -e .tigrc ]] && rm -rf .tigrc
 
 # YCM
-rm -rf .ycm_extra_conf.py
+[[ -e .ycm_extra_conf.py ]] && rm -rf .ycm_extra_conf.py
