@@ -4,6 +4,7 @@
 
 declare -r SYSTEM=$(uname -s)
 declare -r RC_HOME=$(pwd)
+declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
 RC_FILES="zshrc tmux.conf tigrc ycm_extra_conf.py"
 
@@ -39,7 +40,8 @@ fi
   done
 
   # Install Spaceship theme
-  curl -o - https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/install.sh | zsh
+  curl https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/spaceship.zsh -o ./spaceship.zsh-theme
+  mv ./spaceship.zsh-theme "${OH_MY_ZSH_DIR}"/custom/themes/
 
   # Install tmux plugins
   ${TMUX_PLUGINS_DIR}/tpm/bin/install_plugins
