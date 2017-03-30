@@ -4,6 +4,7 @@
 # Main task is fetching the data from server
 
 declare -r RC_HOME=~/.rc
+declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
 
 warn() {
@@ -23,10 +24,14 @@ if [[ "$?" -ne 0 ]]; then
   die "Failed to clone rc repository."
 fi
 
-# Get prezto
-git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-if [[ "$?" -ne 0 ]]; then
-  die "Failed to clone prezto repository."
+# Get oh-my-zsh
+if ! [[ -d "${OH_MY_ZSH_DIR}" ]]; then
+  git clone git://github.com/robbyrussell/oh-my-zsh.git "${OH_MY_ZSH_DIR}"
+  if [[ "$?" -ne 0 ]]; then
+    die "Failed to clone oh-my-zsh repository."
+  fi
+else
+  echo "oh-my-zsh has already exists, so skip downloading the new one."
 fi
 
 # Get TPM for TMUX

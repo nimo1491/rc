@@ -5,7 +5,7 @@
 declare -r SYSTEM=$(uname -s)
 declare -r RC_HOME=$(pwd)
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
-RC_FILES="tmux.conf tigrc ycm_extra_conf.py"
+RC_FILES="zshrc tmux.conf tigrc ycm_extra_conf.py"
 
 warn() {
   echo "$1" >&2
@@ -21,19 +21,13 @@ die() {
 
 # Filter unnecessary files for Linux
 if [[ ${SYSTEM} -ne "Darwin" ]]; then
-  RC_FILES="tmux.conf tigrc ycm_extra_conf.py"
+  RC_FILES="zshrc tmux.conf tigrc ycm_extra_conf.py"
 fi
 
 (
-cd ..
+  cd ..
 
-# Prezto
-  for target in ${RC_HOME}/prezto/*; do
-    targetName=${target##*/}
-    ln -s ${target} ".${targetName}"
-  done
-
-  # Other than prezto
+  # Link all rc files
   for target in ${RC_FILES}; do
     if [[ -e ".${target}" ]] && ! [[ -L ".${target}" ]]; then
       mv ".${target}" ".${target}.old"
@@ -43,6 +37,9 @@ cd ..
       ln -s "${RC_HOME}/${target}" ".${target}"
     fi
   done
+
+  # Install Spaceship theme
+  curl -o -https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/install.sh | zsh
 
   # Install tmux plugins
   ${TMUX_PLUGINS_DIR}/tpm/bin/install_plugins
