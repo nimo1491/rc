@@ -1,40 +1,55 @@
 #!/bin/bash
-RC_HOME=`pwd`
-SYSTEM=`uname -s`
+#
+# Perform installation process
 
-# do not install tigrc on Linux
-if [ $SYSTEM == "Darwin" ]; then
-    RC="tmux.conf tigrc"
-else
-    RC="tmux.conf tigrc"
+declare -r SYSTEM=$(uname -s)
+declare -r RC_HOME=$(pwd)
+declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
+RC_FILES="tmux.conf tigrc ycm_extra_conf.py"
+
+warn() {
+  echo "$1" >&2
+}
+
+die() {
+  warn "$1"
+  exit 1
+}
+
+[[ -z "${RC_HOME}" ]] && die "Failed to get rc root path."
+[[ -z "${SYSTEM}" ]] && die "Failed to get system information."
+
+# Filter unnecessary files for Linux
+if [[ ${SYSTEM} -ne "Darwin" ]]; then
+  RC_FILES="tmux.conf tigrc ycm_extra_conf.py"
 fi
+
+(
 cd ..
 
-# other than zsh
-for target in $RC
-do
-   if [ -e ".$target" ] && [ ! -L ".$target" ]; then
-      mv ".$target" ".$target.old"
-      echo
-   fi
-   if [ ! -L ".$target" ]; then
-      ln -s "$RC_HOME/$target" ".$target"
-   fi
-done
+# Prezto
+  for target in ${RC_HOME}/prezto/*; do
+    targetName=${target##*/}
+    ln -s ${target} ".${targetName}"
+  done
 
-# prezto
-for rcfile in $RC_HOME/prezto/*; do
-    rcRel=${rcfile##*/}
-    ln -s $rcfile ".$rcRel"
-done
+  # Other than prezto
+  for target in ${RC_FILES}; do
+    if [[ -e ".${target}" ]] && ! [[ -L ".${target}" ]]; then
+      mv ".${target}" ".${target}.old"
+      echo "Backup old files."
+    fi
+    if ! [[ -L ".${target}" ]]; then
+      ln -s "${RC_HOME}/${target}" ".${target}"
+    fi
+  done
 
-# install tmux plugins
-~/.tmux/plugins/tpm/bin/install_plugins
+  # Install tmux plugins
+  ${TMUX_PLUGINS_DIR}/tpm/bin/install_plugins
 
-if [[ "$SHELL" =~ .*/zsh ]]
-then
-   echo "Good. You are using $SHELL. No need to chsh."
-else
-   echo "Please change your shell to `which zsh`"
-   chsh
-fi
+  if [[ "${SHELL}" =~ .*/zsh ]]; then
+    echo "Good. You are using $SHELL. No need to chsh."
+  else
+    echo "Please change your shell to `which zsh`"
+  fi
+)
