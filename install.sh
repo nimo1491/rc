@@ -6,7 +6,7 @@ declare -r SYSTEM=$(uname -s)
 declare -r RC_HOME=$(pwd)
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
-RC_FILES="zshrc tmux.conf tigrc ycm_extra_conf.py"
+RC_FILES="zshrc tmux.conf tigrc"
 
 warn() {
   echo "$1" >&2
@@ -22,7 +22,7 @@ die() {
 
 # Filter unnecessary files for Linux
 if [[ ${SYSTEM} -ne "Darwin" ]]; then
-  RC_FILES="zshrc tmux.conf tigrc ycm_extra_conf.py"
+  RC_FILES="zshrc tmux.conf tigrc"
 fi
 
 (
