@@ -41,7 +41,7 @@ fi
 
   # Install Spaceship theme
   [[ -d "${OH_MY_ZSH_DIR}"/custom/themes ]] || mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
-  curl https://raw.githubusercontent.com/denysdovhan/spaceship-zsh-theme/master/spaceship.zsh -o ./spaceship.zsh-theme
+  curl https://raw.githubusercontent.com/nimo1491/spaceship-zsh-theme/master/spaceship.zsh -o ./spaceship.zsh-theme
   mv ./spaceship.zsh-theme "${OH_MY_ZSH_DIR}"/custom/themes/
 
   # Install tmux plugins
