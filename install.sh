@@ -6,6 +6,7 @@ declare -r SYSTEM=$(uname -s)
 declare -r RC_HOME=$(pwd)
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
+declare -r HOME_BIN=~/.bin
 RC_FILES="zshrc tmux.conf tigrc"
 
 warn() {
@@ -38,6 +39,9 @@ fi
       ln -s "${RC_HOME}/${target}" ".${target}"
     fi
   done
+
+  # Link binary folder
+  ln -s "${RC_HOME}"/bin "${HOME_BIN}"
 
   # Install Spaceship theme
   [[ -d "${OH_MY_ZSH_DIR}"/custom/themes ]] || mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
