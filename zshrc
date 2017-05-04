@@ -54,7 +54,7 @@ SPACESHIP_VI_MODE_SHOW=false
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vi-mode history-substring-search colored-man-pages fasd nvm npm node)
+plugins=(git vi-mode history-substring-search colored-man-pages fasd nvm npm node pyenv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -146,4 +146,6 @@ fcs() {
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 # pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
