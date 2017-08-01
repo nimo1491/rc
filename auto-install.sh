@@ -26,7 +26,7 @@ fi
 
 # Get oh-my-zsh
 if ! [[ -d "${OH_MY_ZSH_DIR}" ]]; then
-  git clone git://github.com/robbyrussell/oh-my-zsh.git "${OH_MY_ZSH_DIR}"
+  git clone https://github.com/robbyrussell/oh-my-zsh.git "${OH_MY_ZSH_DIR}"
   if [[ "$?" -ne 0 ]]; then
     die "Failed to clone oh-my-zsh repository."
   fi
