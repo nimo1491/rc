@@ -87,7 +87,7 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias -g tmux='tmux -2'     # tmux 256 color
+# alias -g tmux='tmux -2'     # tmux 256 color
 alias -g vi='vim'           # vim
 alias -g tiga='tig --all'   # tig all branches
 
