@@ -91,6 +91,13 @@ fi
 alias -g vi='vim'           # vim
 alias -g tiga='tig --all'   # tig all branches
 
+# WSL - Fix mkdir command has wrong permission
+if grep -q Microsoft /proc/version 2>/dev/null; then
+    if [ "$(umask)" = '0000' ] || [ "$(umask)" = '000' ]; then
+        umask 0022
+    fi
+fi
+
 # fzf
 
 # fasd
