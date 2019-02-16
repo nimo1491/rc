@@ -8,7 +8,7 @@ export ZSH=$HOME/.oh-my-zsh
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="spaceship"
-SPACESHIP_PROMPT_SYMBOL="☻"
+# SPACESHIP_CHAR_SYMBOL="☻"
 SPACESHIP_TIME_SHOW=true
 SPACESHIP_VI_MODE_SHOW=false
 SPACESHIP_DOCKER_SHOW=false
