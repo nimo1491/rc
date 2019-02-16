@@ -55,7 +55,7 @@ SPACESHIP_DOCKER_SHOW=false
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vi-mode history-substring-search colored-man-pages fasd nvm npm node pyenv)
+plugins=(git github vi-mode history-substring-search colored-man-pages fasd nvm npm node python pyenv docker vagrant)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -101,6 +101,7 @@ fi
 # fzf
 
 # fasd
+unalias z 2> /dev/null
 z() {
   local dir
   dir="$(fasd -Rdl "$1" | fzf-tmux -1 -0 --no-sort +m)" && cd "${dir}" || return 1
