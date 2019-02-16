@@ -10,8 +10,8 @@ export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="spaceship"
 # SPACESHIP_CHAR_SYMBOL="☻"
 SPACESHIP_TIME_SHOW=true
-SPACESHIP_VI_MODE_SHOW=false
-SPACESHIP_DOCKER_SHOW=false
+# SPACESHIP_VI_MODE_SHOW=false
+# SPACESHIP_DOCKER_SHOW=false
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
