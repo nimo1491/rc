@@ -17,7 +17,7 @@ bind generic x      :toggle vertical-split      # Toggle vertical split
 
 # Colors
 color default white black normal
-color cursor white magenta bold
+color cursor white red bold
 color date cyan default
 color delimiter cyan default
 color line-number yellow default
