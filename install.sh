@@ -6,6 +6,7 @@ declare -r SYSTEM=$(uname -s)
 declare -r RC_HOME=$(pwd)
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
+declare -r FZF_DIR=~/.fzf
 declare -r HOME_BIN=~/.bin
 RC_FILES="zshrc tmux.conf tigrc"
 
@@ -47,6 +48,9 @@ fi
   [[ -d "${OH_MY_ZSH_DIR}"/custom/themes ]] || mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
   git clone https://github.com/denysdovhan/spaceship-prompt.git "${OH_MY_ZSH_DIR}/custom/themes/spaceship-prompt"
   ln -s "${OH_MY_ZSH_DIR}/custom/themes/spaceship-prompt/spaceship.zsh-theme" "${OH_MY_ZSH_DIR}/custom/themes/spaceship.zsh-theme"
+
+  # Install FZF
+  ${FZF_DIR}/install --all
 
   # Install tmux plugins
   ${TMUX_PLUGINS_DIR}/tpm/bin/install_plugins

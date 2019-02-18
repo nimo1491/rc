@@ -6,6 +6,7 @@
 declare -r RC_HOME=~/.rc
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_PLUGINS_DIR=~/.tmux/plugins
+declare -r FZF_DIR=~/.fzf
 
 warn() {
   echo "$1" >&2
@@ -43,6 +44,17 @@ if ! [[ -d "${TMUX_PLUGINS_DIR}" ]]; then
   fi
 else
   echo "TPM has already exists, so skip downloading the new one."
+fi
+
+# Get TPM for TMUX
+if ! [[ -d "${FZF_DIR}" ]]; then
+  mkdir -p "${FZF_DIR}"
+  git clone https://github.com/junegunn/fzf "${FZF_DIR}"
+  if [[ "$?" -ne 0 ]]; then
+    die "Failed to clone FZF repository."
+  fi
+else
+  echo "FZF has already exists, so skip downloading the new one."
 fi
 
 # Perform installation
