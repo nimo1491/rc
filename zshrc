@@ -119,6 +119,14 @@ fzf-down() {
   fzf --height 65% "$@" --border
 }
 
+# Switch tmux-sessions
+fs() {
+    local session
+    session=$(tmux list-sessions -F "#{session_name}" | \
+        fzf --height 40% --reverse --query="$1" --select-1 --exit-0) &&
+    tmux switch-client -t "$session"
+}
+
 # fco - checkout git branch/tag
 fco() {
   local tags branches target
