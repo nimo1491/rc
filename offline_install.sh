@@ -4,7 +4,7 @@ declare -r BIN=.bin
 declare -r OH_MY_ZSH=.oh-my-zsh
 declare -r FZF=.fzf
 declare -r TMUX=.tmux
-RC_FILES="zshrc tmux.conf tigrc"
+RC_FILES="zshrc p10k.zsh tmux.conf tigrc"
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 rc_base="$(pwd)"

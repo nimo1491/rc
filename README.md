@@ -1,8 +1,8 @@
-#Nimo's rc Files
+# Nimo's rc Files
 
 My configuration files of zsh, tmux, and tig.
 
-##ONE-STEP INSTALL
+## ONE-STEP INSTALL
 
 Use curl (for Mac OS X):
 
