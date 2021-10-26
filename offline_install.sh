@@ -33,6 +33,9 @@ if ! [[ -L "$HOME"/"$TMUX" ]]; then
   ln -s "$rc_base"/"$TMUX" "$HOME"/"$TMUX"
 fi
 
+# Link tmux conf
+ln -s "$HOME"/"$TMUX"/.tmux.conf "$HOME"/.tmux.conf
+
 # Link fzf folder
 if ! [[ -L "$HOME"/"$FZF" ]]; then
     ln -s "$rc_base"/"$FZF" "$HOME"/"$FZF"

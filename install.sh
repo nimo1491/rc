@@ -41,7 +41,7 @@ fi
     fi
   done
 
-  # Link tmux folder
+  # Link tmux conf
   ln -s -f ${TMUX_DIR}/.tmux.conf
 
   # Link binary folder
@@ -55,7 +55,7 @@ fi
   # Install Powerlevel10k theme
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${OH_MY_ZSH_DIR}/custom/themes/powerlevel10k"
 
-  # Install FZF
+  # Install fzf
   ${FZF_DIR}/install --all
 
   # Install tmux plugins
