@@ -8,7 +8,7 @@ declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_DIR=~/.tmux
 declare -r FZF_DIR=~/.fzf
 declare -r HOME_BIN=~/.bin
-RC_FILES="zshrc p10k.zsh tigrc"
+RC_FILES="zshrc p10k.zsh tigrc tmux.conf.local"
 
 warn() {
   echo "$1" >&2
@@ -24,7 +24,7 @@ die() {
 
 # Filter unnecessary files for Linux
 if [[ ${SYSTEM} -ne "Darwin" ]]; then
-  RC_FILES="zshrc p10k.zsh tigrc"
+  RC_FILES="zshrc p10k.zsh tigrc tmux.conf.local"
 fi
 
 (
@@ -57,9 +57,6 @@ fi
 
   # Install FZF
   ${FZF_DIR}/install --all
-
-  # Install tmux.conf.local
-  cp ${TMUX_DIR}/.tmux.conf.local ~
 
   # Install tmux plugins
   # ${TMUX_DIR}/plugins/tpm/bin/install_plugins
