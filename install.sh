@@ -47,12 +47,8 @@ fi
   # Link binary folder
   ln -s "${RC_HOME}"/bin "${HOME_BIN}"
 
-  # Install Spaceship theme
-  [[ -d "${OH_MY_ZSH_DIR}"/custom/themes ]] || mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
-  # git clone https://github.com/denysdovhan/spaceship-prompt.git "${OH_MY_ZSH_DIR}/custom/themes/spaceship-prompt"
-  # ln -s "${OH_MY_ZSH_DIR}/custom/themes/spaceship-prompt/spaceship.zsh-theme" "${OH_MY_ZSH_DIR}/custom/themes/spaceship.zsh-theme"
-
   # Install Powerlevel10k theme
+  [[ -d "${OH_MY_ZSH_DIR}"/custom/themes ]] || mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${OH_MY_ZSH_DIR}/custom/themes/powerlevel10k"
 
   # Install fzf
