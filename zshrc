@@ -7,10 +7,10 @@ export ZSH=$HOME/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="spaceship"
 ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="spaceship"
 # SPACESHIP_CHAR_SYMBOL="☻"
-SPACESHIP_TIME_SHOW=true
+# SPACESHIP_TIME_SHOW=true
 # SPACESHIP_VI_MODE_SHOW=false
 # SPACESHIP_DOCKER_SHOW=false
 
@@ -69,9 +69,9 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
+  export EDITOR='nvim'
 else
-  export EDITOR='vim'
+  export EDITOR='nvim'
 fi
 
 # Compilation flags
@@ -89,7 +89,7 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # alias -g tmux='tmux -2'     # tmux 256 color
-alias -g vi='vim'           # vim
+alias -g vi='nvim'           # vim
 alias -g tiga='tig --all'   # tig all branches
 
 # WSL - Fix mkdir command has wrong permission
@@ -100,6 +100,37 @@ if grep -q Microsoft /proc/version 2>/dev/null; then
 fi
 
 # fzf
+fzf-down() {
+  fzf --height 65% --min-height 20 --border --bind ctrl-/:toggle-preview "$@"
+}
+
+# ripgrep
+Rg() {
+  local selected=$(
+    rg --column --line-number --no-heading --color=always --smart-case "$1" |
+      fzf --ansi \
+          --delimiter : \
+          --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
+          --preview-window '~3:+{2}+3/2' |
+      awk -F ':' '{print $1}'
+  )
+  [ -n "$selected" ] && $EDITOR "$selected"
+}
+
+RG() {
+  RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+  INITIAL_QUERY="$1"
+  local selected=$(
+    FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY' || true" \
+      fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+          --ansi --disabled --query "$INITIAL_QUERY" \
+          --delimiter : \
+          --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
+          --preview-window '~3:+{2}+3/2' |
+      awk -F ':' '{print $1}'
+  )
+  [ -n "$selected" ] && $EDITOR "$selected"
+}
 
 # fasd
 unalias z 2> /dev/null
@@ -107,17 +138,24 @@ z() {
   local dir
   dir="$(fasd -Rdl "$1" | fzf-tmux -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
+
 unalias v 2> /dev/null
 v() {
   local file
   file="$(fasd -Rfl "$1" | fzf-tmux -1 -0 --no-sort +m)" && vi "${file}" || return 1
 }
 
-# GIT heart FZF
-# -------------
+# Advanced customization of fzf options
+_fzf_comprun() {
+  local command=$1
+  shift
 
-fzf-down() {
-  fzf --height 65% "$@" --border
+  case "$command" in
+    cd)           fzf "$@" --preview 'tree -C {}' ;;
+    export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
+    ssh)          fzf "$@" --preview 'dig {}' ;;
+    *)            fzf "$@" ;;
+  esac
 }
 
 # Switch tmux-sessions
@@ -127,6 +165,9 @@ fs() {
         fzf --height 40% --reverse --query="$1" --select-1 --exit-0) &&
     tmux switch-client -t "$session"
 }
+
+# GIT heart FZF
+# -------------
 
 # fco - checkout git branch/tag
 fco() {
@@ -145,58 +186,64 @@ fco() {
 # fshow - git commit browser
 fshow() {
   git log --graph --color=always \
-      --format="%Cred%h %Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" "$@" |
+    --format="%Cred%h %Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" "$@" |
   fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF"
+    --bind "ctrl-m:execute:
+            (grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+            {}
+            FZF-EOF"
 }
 
 is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
-fgf() {
+_gf() {
   is_in_git_repo || return
   git -c color.status=always status --short |
   fzf-down -m --ansi --nth 2..,.. \
-    --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
+    --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1})' |
   cut -c4- | sed 's/.* -> //'
 }
 
-fgb() {
+_gb() {
   is_in_git_repo || return
   git branch -a --color=always | grep -v '/HEAD\s' | sort |
   fzf-down --ansi --multi --tac --preview-window right:70% \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -200' |
+    --preview 'git log --oneline --graph --date=short --color=always --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1)' |
   sed 's/^..//' | cut -d' ' -f1 |
   sed 's#^remotes/##'
 }
 
-fgt() {
+_gt() {
   is_in_git_repo || return
   git tag --sort -version:refname |
   fzf-down --multi --preview-window right:70% \
-    --preview 'git show --color=always {} | head -200'
+    --preview 'git show --color=always {}'
 }
 
-fgh() {
+_gh() {
   is_in_git_repo || return
-  git log --all --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
+  git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
   fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
     --header 'Press CTRL-S to toggle sort' \
-    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
+    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always' |
   grep -o "[a-f0-9]\{7,\}"
 }
 
-fgr() {
+_gr() {
   is_in_git_repo || return
   git remote -v | awk '{print $1 "\t" $2}' | uniq |
   fzf-down --tac \
-    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1} | head -200' |
+    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" {1}' |
   cut -d$'\t' -f1
+}
+
+_gs() {
+  is_in_git_repo || return
+  git stash list | fzf-down --reverse -d: --preview 'git show --color=always {1}' |
+  cut -d: -f1
 }
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
