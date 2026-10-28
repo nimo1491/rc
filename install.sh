@@ -67,7 +67,7 @@ die() {
       warn "Failed to install mise."
   fi
 
-  # Install the Node / Python versions from mise.toml
+  # Install the tools listed in mise.toml
   if [[ -x "${LOCAL_BIN}"/mise ]]; then
     "${LOCAL_BIN}"/mise install || warn "Failed to run mise install."
   elif command -v mise > /dev/null; then
