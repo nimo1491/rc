@@ -36,6 +36,10 @@ die() {
   # Link tmux conf
   ln -s -f ${TMUX_DIR}/.tmux.conf
 
+  # Link starship config
+  mkdir -p .config
+  [[ -L .config/starship.toml ]] || ln -s "${RC_HOME}"/starship.toml .config/starship.toml
+
   # Install Powerlevel10k theme
   if ! [[ -d "${OH_MY_ZSH_DIR}"/custom/themes/powerlevel10k ]]; then
     mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
@@ -46,6 +50,8 @@ die() {
   ${FZF_DIR}/install --all
 
   command -v zoxide > /dev/null || warn "zoxide is not installed. Please install it (e.g. sudo apt install zoxide)."
+  command -v starship > /dev/null || [[ -x ~/.local/bin/starship ]] ||
+    warn "starship is not installed, falling back to Powerlevel10k. Install it with: curl -sS https://starship.rs/install.sh | sh -s -- -b ~/.local/bin"
 
   # Install tmux plugins
   # ${TMUX_DIR}/plugins/tpm/bin/install_plugins

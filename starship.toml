@@ -1,0 +1,86 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Laid out like the previous p10k config: context + dir + git on the first
+# line, prompt char on the second, status/tools on the right. Plain-text
+# symbols only, so no Nerd Font is required.
+
+add_newline = true
+command_timeout = 1000
+
+format = """
+$username$hostname${env_var.SCHROOT_CHROOT_NAME}${env_var.BUILDDIR}\
+$directory$git_branch$git_state$git_status$git_metrics
+$character"""
+
+right_format = """$status$cmd_duration$jobs$python$nodejs"""
+
+[character]
+success_symbol = '[❯](bold green)'
+error_symbol = '[❯](bold red)'
+vimcmd_symbol = '[❮](bold green)'
+
+# user@host, only over SSH (or as root)
+[username]
+format = '[$user]($style)@'
+
+[hostname]
+ssh_symbol = ''
+format = '[$hostname]($style) '
+
+# Inside a schroot build environment
+[env_var.SCHROOT_CHROOT_NAME]
+style = 'bold yellow'
+format = '[\[chroot:$env_value\]]($style) '
+
+# After sourcing oe-init-build-env
+[env_var.BUILDDIR]
+style = 'bold purple'
+format = '[yocto]($style) '
+
+[directory]
+truncation_length = 5
+truncation_symbol = '…/'
+truncate_to_repo = false
+style = 'cyan'
+repo_root_style = 'bold cyan'
+
+[directory.substitutions]
+'/mnt/data3/workspace/nimo' = 'ws3'
+'/mnt/data4/workspace/nimo' = 'ws4'
+
+[git_branch]
+symbol = ''
+format = '[$symbol$branch(:$remote_branch)]($style) '
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+ignore_submodules = true
+
+[git_metrics]
+disabled = false
+ignore_submodules = true
+
+[status]
+disabled = false
+symbol = '✘'
+format = '[$symbol $status]($style) '
+
+[cmd_duration]
+format = '[took $duration]($style) '
+
+[jobs]
+symbol = '✦'
+number_threshold = 1
+
+# Only for virtualenvs and real Python projects, not every dir with .py files
+[python]
+symbol = 'py '
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+detect_extensions = []
+detect_files = ['.python-version', 'pyproject.toml']
+# Show the project name instead of a generic venv dir name (uv, python -m venv)
+generic_venv_names = ['.venv', 'venv']
+
+[nodejs]
+symbol = 'node '
+format = '[$symbol($version )]($style)'

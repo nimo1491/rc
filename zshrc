@@ -1,15 +1,23 @@
+export PATH=$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
+
+# Prompt: starship by default; start zsh with RC_PROMPT=p10k (or without
+# starship installed) to fall back to Powerlevel10k
+if [[ $RC_PROMPT != p10k ]] && (( $+commands[starship] )); then
+  RC_PROMPT=starship
+else
+  RC_PROMPT=p10k
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+if [[ $RC_PROMPT == p10k && -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export PATH=$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
-
 # oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="powerlevel10k/powerlevel10k"
+[[ $RC_PROMPT == starship ]] && ZSH_THEME="" || ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git vi-mode history-substring-search colored-man-pages nvm npm node python docker)
 
 # Load nvm on first use of nvm/node/npm/npx instead of at startup
@@ -177,8 +185,13 @@ if (( $+commands[pyenv] )); then
   [[ -d $PYENV_ROOT/plugins/pyenv-virtualenv ]] && eval "$(pyenv virtualenv-init - zsh)"
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [[ $RC_PROMPT == starship ]]; then
+  ZLE_RPROMPT_INDENT=0
+  eval "$(starship init zsh)"
+else
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
 
 # zoxide (z / zi); must be initialized after compinit
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
