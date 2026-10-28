@@ -4,6 +4,7 @@
 
 # View settings
 set main-view           = line-number:no,interval=5 id:yes date:default author:full commit-title:yes,graph,refs,overflow=no
+set blame-view          = date:default author:full id:yes,color line-number:yes,interval=1 text
 set ignore-space        = no        # Enum: no, all, some, at-eol (diff)
 set diff-context        = 3         # Number of lines to show around diff changes (diff)
 set ignore-case         = yes       # Ignore case when searching?
@@ -11,12 +12,30 @@ set split-view-height   = 70%       # Height of the bottom view for horizontal s
 set vertical-split      = auto      # Enum: horizontal, vertical, auto; Use auto to
 set split-view-width    = 70%       # Width of right-most view for vertical splits
 set git-colors          = no
+set refresh-mode        = auto      # Reload views when the repo changes
+set mouse               = yes
+set editor-line-number  = yes       # Open the editor at the selected line
+set tab-size            = 4
 
 # User-defined commands
 bind generic x      :toggle vertical-split      # Toggle vertical split
 
+# Vim-style movement (g replaces the default grep view; use :grep instead)
+bind generic g      move-first-line
+bind generic G      move-last-line
+bind main    G      move-last-line
+bind main    T      :toggle commit-title-graph  # Toggle the graph (G by default)
+bind generic <C-f>  move-page-down
+bind generic <C-b>  move-page-up
+
+# Copy the selected commit ID to the local clipboard via OSC 52 (works over SSH/tmux)
+bind generic y      @sh -c "printf '\\033]52;c;%s\\a' $(printf %s %(commit) | base64) > /dev/tty"
+
+# Show the selected commit with delta
+bind main    V      >sh -c "git show %(commit) | delta"
+
 # Colors
-color default white black normal
+color default default default normal
 color cursor white red bold
 color date cyan default
 color delimiter cyan default
@@ -26,4 +45,3 @@ color diff-index blue default
 color diff-chunk magenta default
 color "Reported-by:" green default
 color graph-commit cyan default
-
