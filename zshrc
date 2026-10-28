@@ -193,4 +193,16 @@ else
 fi
 
 # zoxide (z / zi); must be initialized after compinit
-(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+  # Plain `z` opens the interactive picker (like `zi`) instead of going home
+  _rc_z() {
+    if (( $# )); then
+      __zoxide_z "$@"
+    else
+      __zoxide_zi
+    fi
+  }
+  alias z=_rc_z
+  (( $+functions[__zoxide_z_complete] )) && compdef __zoxide_z_complete _rc_z
+fi
