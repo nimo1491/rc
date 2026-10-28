@@ -63,7 +63,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vi-mode history-substring-search colored-man-pages fasd nvm npm node python pyenv docker vagrant)
+plugins=(git vi-mode history-substring-search colored-man-pages nvm npm node python pyenv docker vagrant)
 
 # Load nvm on first use of nvm/node/npm/npx instead of at startup
 zstyle ':omz:plugins:nvm' lazy yes
@@ -135,17 +135,14 @@ RG() {
   [ -n "$selected" ] && $EDITOR "$selected"
 }
 
-# fasd
-unalias z 2> /dev/null
-z() {
-  local dir
-  dir="$(fasd -Rdl "$1" | fzf-tmux -1 -0 --no-sort +m)" && cd "${dir}" || return 1
-}
-
-unalias v 2> /dev/null
+# v - open a recently edited file (from nvim's oldfiles)
 v() {
   local file
-  file="$(fasd -Rfl "$1" | fzf-tmux -1 -0 --no-sort +m)" && vi "${file}" || return 1
+  file="$(
+    nvim -u NONE --headless -c 'lua io.stdout:write(table.concat(vim.v.oldfiles, "\n"))' -c 'qa!' 2> /dev/null |
+      while read -r f; do [[ -f $f ]] && print -r -- "$f"; done |
+      fzf-tmux -1 -0 --no-sort +m --query="$1"
+  )" && vi "${file}" || return 1
 }
 
 # Advanced customization of fzf options
@@ -259,3 +256,6 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# zoxide (z / zi); must be initialized after compinit
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
