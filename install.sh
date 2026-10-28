@@ -6,6 +6,7 @@ declare -r RC_HOME=$(pwd)
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_DIR=~/.tmux
 declare -r FZF_DIR=~/.fzf
+declare -r LOCAL_BIN=~/.local/bin
 RC_FILES="zshrc zshenv p10k.zsh tigrc tmux.conf.local"
 
 warn() {
@@ -54,10 +55,24 @@ die() {
   ${FZF_DIR}/install --all
 
   command -v zoxide > /dev/null || warn "zoxide is not installed. Please install it (e.g. sudo apt install zoxide)."
-  command -v starship > /dev/null || [[ -x ~/.local/bin/starship ]] ||
-    warn "starship is not installed, falling back to Powerlevel10k. Install it with: curl -sS https://starship.rs/install.sh | sh -s -- -b ~/.local/bin"
-  command -v mise > /dev/null || [[ -x ~/.local/bin/mise ]] ||
-    warn "mise is not installed. Install it with: curl https://mise.run | sh, then run: mise install"
+
+  # Install starship and mise into ~/.local/bin (no sudo needed)
+  mkdir -p "${LOCAL_BIN}"
+  if ! command -v starship > /dev/null && ! [[ -x "${LOCAL_BIN}"/starship ]]; then
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "${LOCAL_BIN}" ||
+      warn "Failed to install starship, falling back to Powerlevel10k."
+  fi
+  if ! command -v mise > /dev/null && ! [[ -x "${LOCAL_BIN}"/mise ]]; then
+    curl -sS https://mise.run | MISE_INSTALL_PATH="${LOCAL_BIN}"/mise sh ||
+      warn "Failed to install mise."
+  fi
+
+  # Install the Node / Python versions from mise.toml
+  if [[ -x "${LOCAL_BIN}"/mise ]]; then
+    "${LOCAL_BIN}"/mise install || warn "Failed to run mise install."
+  elif command -v mise > /dev/null; then
+    mise install || warn "Failed to run mise install."
+  fi
 
   # Install tmux plugins
   # ${TMUX_DIR}/plugins/tpm/bin/install_plugins
