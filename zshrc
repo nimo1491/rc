@@ -18,10 +18,7 @@ fi
 # oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
 [[ $RC_PROMPT == starship ]] && ZSH_THEME="" || ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git vi-mode history-substring-search colored-man-pages nvm npm node python docker)
-
-# Load nvm on first use of nvm/node/npm/npx instead of at startup
-zstyle ':omz:plugins:nvm' lazy yes
+plugins=(git vi-mode history-substring-search colored-man-pages npm node python docker)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -177,13 +174,15 @@ _gs() {
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && path=($PYENV_ROOT/bin $path)
-if (( $+commands[pyenv] )); then
-  eval "$(pyenv init - zsh)"
-  [[ -d $PYENV_ROOT/plugins/pyenv-virtualenv ]] && eval "$(pyenv virtualenv-init - zsh)"
-fi
+# mise - Node / Python versions (global defaults in ~/.config/mise/config.toml)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+# venv - activate a shared virtualenv under ~/.venvs, e.g. `venv robot`
+venv() {
+  [[ -f ~/.venvs/$1/bin/activate ]] || { echo "venv: no such virtualenv: $1" >&2; return 1 }
+  source ~/.venvs/$1/bin/activate
+}
+compdef "_path_files -W $HOME/.venvs -/" venv
 
 if [[ $RC_PROMPT == starship ]]; then
   ZLE_RPROMPT_INDENT=0

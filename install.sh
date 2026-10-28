@@ -40,6 +40,10 @@ die() {
   mkdir -p .config
   [[ -L .config/starship.toml ]] || ln -s "${RC_HOME}"/starship.toml .config/starship.toml
 
+  # Link mise global config
+  mkdir -p .config/mise
+  [[ -L .config/mise/config.toml ]] || ln -s "${RC_HOME}"/mise.toml .config/mise/config.toml
+
   # Install Powerlevel10k theme
   if ! [[ -d "${OH_MY_ZSH_DIR}"/custom/themes/powerlevel10k ]]; then
     mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
@@ -52,6 +56,8 @@ die() {
   command -v zoxide > /dev/null || warn "zoxide is not installed. Please install it (e.g. sudo apt install zoxide)."
   command -v starship > /dev/null || [[ -x ~/.local/bin/starship ]] ||
     warn "starship is not installed, falling back to Powerlevel10k. Install it with: curl -sS https://starship.rs/install.sh | sh -s -- -b ~/.local/bin"
+  command -v mise > /dev/null || [[ -x ~/.local/bin/mise ]] ||
+    warn "mise is not installed. Install it with: curl https://mise.run | sh, then run: mise install"
 
   # Install tmux plugins
   # ${TMUX_DIR}/plugins/tpm/bin/install_plugins

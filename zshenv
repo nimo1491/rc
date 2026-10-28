@@ -1,10 +1,4 @@
-# Put nvm's default Node on PATH without loading nvm, so global npm tools
-# (e.g. claude) work in every shell, including non-interactive ones.
-() {
-  local default_file=$HOME/.nvm/alias/default
-  [[ -r $default_file ]] || return
-  local ver=$(<$default_file)
-  # Newest installed version matching the default alias (e.g. "22" -> v22.x.y)
-  local -a dirs=($HOME/.nvm/versions/node/v${ver#v}*(N/On))
-  (( $#dirs )) && path=($dirs[1]/bin $path)
-}
+# Put mise's shims on PATH so Node/Python tools (e.g. claude) also work in
+# non-interactive shells. Interactive shells use `mise activate` in zshrc.
+[[ -d ${XDG_DATA_HOME:-$HOME/.local/share}/mise/shims ]] &&
+  path=(${XDG_DATA_HOME:-$HOME/.local/share}/mise/shims $path)
