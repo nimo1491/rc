@@ -1,5 +1,12 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.bin:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=$HOME/.bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -56,7 +63,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git github vi-mode history-substring-search colored-man-pages fasd nvm npm node python pyenv docker vagrant)
+plugins=(git vi-mode history-substring-search colored-man-pages fasd nvm npm node python pyenv docker vagrant)
+
+# Load nvm on first use of nvm/node/npm/npx instead of at startup
+zstyle ':omz:plugins:nvm' lazy yes
 
 source $ZSH/oh-my-zsh.sh
 
@@ -89,15 +99,8 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # alias -g tmux='tmux -2'     # tmux 256 color
-alias -g vi='nvim'           # vim
-alias -g tiga='tig --all'   # tig all branches
-
-# WSL - Fix mkdir command has wrong permission
-if grep -q Microsoft /proc/version 2>/dev/null; then
-    if [ "$(umask)" = '0000' ] || [ "$(umask)" = '000' ]; then
-        umask 0022
-    fi
-fi
+alias vi='nvim'           # vim
+alias tiga='tig --all'   # tig all branches
 
 # fzf
 fzf-down() {
@@ -118,10 +121,10 @@ Rg() {
 }
 
 RG() {
-  RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
-  INITIAL_QUERY="$1"
+  local RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+  local INITIAL_QUERY="$1"
   local selected=$(
-    FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY' || true" \
+    FZF_DEFAULT_COMMAND="$RG_PREFIX ${(qq)INITIAL_QUERY} || true" \
       fzf --bind "change:reload:$RG_PREFIX {q} || true" \
           --ansi --disabled --query "$INITIAL_QUERY" \
           --delimiter : \
