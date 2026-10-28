@@ -2,12 +2,10 @@
 #
 # Perform installation process
 
-declare -r SYSTEM=$(uname -s)
 declare -r RC_HOME=$(pwd)
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_DIR=~/.tmux
 declare -r FZF_DIR=~/.fzf
-declare -r HOME_BIN=~/.bin
 RC_FILES="zshrc zshenv p10k.zsh tigrc tmux.conf.local"
 
 warn() {
@@ -20,12 +18,6 @@ die() {
 }
 
 [[ -z "${RC_HOME}" ]] && die "Failed to get rc root path."
-[[ -z "${SYSTEM}" ]] && die "Failed to get system information."
-
-# Filter unnecessary files for Linux
-if [[ ${SYSTEM} -ne "Darwin" ]]; then
-  RC_FILES="zshrc zshenv p10k.zsh tigrc tmux.conf.local"
-fi
 
 (
   cd ..
@@ -44,15 +36,16 @@ fi
   # Link tmux conf
   ln -s -f ${TMUX_DIR}/.tmux.conf
 
-  # Link binary folder
-  ln -s "${RC_HOME}"/bin "${HOME_BIN}"
-
   # Install Powerlevel10k theme
-  [[ -d "${OH_MY_ZSH_DIR}"/custom/themes ]] || mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${OH_MY_ZSH_DIR}/custom/themes/powerlevel10k"
+  if ! [[ -d "${OH_MY_ZSH_DIR}"/custom/themes/powerlevel10k ]]; then
+    mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${OH_MY_ZSH_DIR}/custom/themes/powerlevel10k"
+  fi
 
   # Install fzf
   ${FZF_DIR}/install --all
+
+  command -v zoxide > /dev/null || warn "zoxide is not installed. Please install it (e.g. sudo apt install zoxide)."
 
   # Install tmux plugins
   # ${TMUX_DIR}/plugins/tpm/bin/install_plugins
