@@ -15,9 +15,9 @@ My configuration files for zsh, Neovim, tmux and tig, tested on Ubuntu.
 
 Install these first (Ubuntu):
 
-    sudo apt install git curl zsh tmux tig tree pipx
+    sudo apt install git curl zsh tmux tig tree pipx universal-ctags
 
-Neovim, starship, delta, ripgrep, bat and zoxide are installed by mise at the
+Neovim, starship, delta, ripgrep, bat, zoxide and clangd are installed by mise at the
 versions pinned in `mise/config.toml`. It is still worth installing the apt packages
 `neovim ripgrep bat git-delta zoxide` as fallbacks for contexts without mise
 (sudo, other users, tools that run git without your shell). `pipx` is needed by
@@ -45,9 +45,8 @@ To re-run the setup on an existing clone, run `~/.rc/install.sh`.
       git -C ~/.rc config user.name "Nimo Hsieh"
       git -C ~/.rc config user.email "nimo1491@gmail.com"
 
-- Optionally install clangd for C/C++ completion in Neovim
-  (`sudo apt install clangd universal-ctags`). coc.nvim installs its extensions
-  on the first start.
+- coc.nvim installs its extensions on the first start. clangd for C/C++
+  completion comes from mise; Tagbar uses universal-ctags from apt.
 - Start a new shell with `exec zsh`, or `chsh -s $(which zsh)` if zsh is not
   the login shell yet.
 

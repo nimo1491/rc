@@ -9,6 +9,8 @@ delta = "0.20"
 ripgrep = "15"
 bat = "0.26"
 zoxide = "0.10"
+# Language server for coc-clangd (not in the mise registry, so from GitHub releases)
+"github:clangd/clangd" = "22"
 # Global CLI tools
 "npm:@playwright/cli" = "0.1.22"
 "pipx:tox" = "latest"
