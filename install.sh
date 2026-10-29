@@ -3,13 +3,22 @@
 # Perform installation process
 
 declare -r RC_HOME=$(cd "$(dirname "$0")" && pwd)
-declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_DIR=~/.tmux
 declare -r FZF_DIR=~/.fzf
 declare -r LOCAL_BIN=~/.local/bin
-RC_FILES="zshrc zshenv p10k.zsh tigrc tmux.conf.local"
+# Config files to link, as "<path in this repo>:<path under ~>"
+LINKS=(
+  "zsh/zshrc:.zshrc"
+  "zsh/zshenv:.zshenv"
+  "tmux/tmux.conf.local:.tmux.conf.local"
+  "tig/tigrc:.tigrc"
+  "starship/starship.toml:.config/starship.toml"
+  "mise/config.toml:.config/mise/config.toml"
+  "nvim/init.vim:.config/nvim/init.vim"
+  "nvim/coc-settings.json:.config/nvim/coc-settings.json"
+)
 # Commands the configs rely on (rg, bat, delta, zoxide, starship and nvim come
-# from mise.toml; the rest from apt)
+# from mise/config.toml; the rest from apt)
 REQUIRED_CMDS="zsh tmux tig nvim rg bat delta zoxide starship tree pipx"
 
 warn() {
@@ -21,40 +30,36 @@ die() {
   exit 1
 }
 
+# Link ~/<dst> to <src> in this repo, backing up an existing regular file.
+# An existing link is replaced, so moved files in the repo are picked up.
+link() {
+  local src="${RC_HOME}/$1" dst="$2" backup
+
+  mkdir -p "$(dirname "${dst}")"
+  if [[ -e "${dst}" ]] && ! [[ -L "${dst}" ]]; then
+    backup="${dst}.old"
+    [[ -e "${backup}" ]] && backup="${backup}.$(date +%Y%m%d%H%M%S)"
+    mv "${dst}" "${backup}"
+    echo "Backup ~/${dst} to ~/${backup}."
+  fi
+  ln -sfn "${src}" "${dst}"
+}
+
 [[ -z "${RC_HOME}" ]] && die "Failed to get rc root path."
 
 (
   cd ~ || die "Failed to change to the home directory."
 
-  # Link all rc files
-  for target in ${RC_FILES}; do
-    if [[ -e ".${target}" ]] && ! [[ -L ".${target}" ]]; then
-      backup=".${target}.old"
-      [[ -e "${backup}" ]] && backup="${backup}.$(date +%Y%m%d%H%M%S)"
-      mv ".${target}" "${backup}"
-      echo "Backup ~/.${target} to ~/${backup}."
-    fi
-    if ! [[ -L ".${target}" ]]; then
-      ln -s "${RC_HOME}/${target}" ".${target}"
-    fi
+  # Link all config files
+  for entry in "${LINKS[@]}"; do
+    link "${entry%%:*}" "${entry#*:}"
   done
+  ln -sfn ${TMUX_DIR}/.tmux.conf .tmux.conf
 
-  # Link tmux conf
-  ln -s -f ${TMUX_DIR}/.tmux.conf
-
-  # Link starship config
-  mkdir -p .config
-  [[ -L .config/starship.toml ]] || ln -s "${RC_HOME}"/starship.toml .config/starship.toml
-
-  # Link mise global config
-  mkdir -p .config/mise
-  [[ -L .config/mise/config.toml ]] || ln -s "${RC_HOME}"/mise.toml .config/mise/config.toml
-
-  # Install Powerlevel10k theme
-  if ! [[ -d "${OH_MY_ZSH_DIR}"/custom/themes/powerlevel10k ]]; then
-    mkdir -p "${OH_MY_ZSH_DIR}"/custom/themes
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${OH_MY_ZSH_DIR}/custom/themes/powerlevel10k"
-  fi
+  # Remove links left over from older layouts of this repo
+  [[ -L .p10k.zsh ]] && ! [[ -e .p10k.zsh ]] && rm .p10k.zsh
+  # Older setups linked this directory to ~/.vim/autoload
+  [[ -L .local/share/nvim/site/autoload ]] && rm .local/share/nvim/site/autoload
 
   # Install fzf
   ${FZF_DIR}/install --all
@@ -66,12 +71,21 @@ die() {
       warn "Failed to install mise."
   fi
 
-  # Install the tools listed in mise.toml (pipx:* tools need pipx)
+  # Install the tools listed in mise/config.toml (pipx:* tools need pipx)
   if [[ -x "${LOCAL_BIN}"/mise ]]; then
     "${LOCAL_BIN}"/mise install || warn "Failed to run mise install."
   elif command -v mise > /dev/null; then
     mise install || warn "Failed to run mise install."
   fi
+
+  # Install the Neovim plugins with vim-plug
+  if ! [[ -f .local/share/nvim/site/autoload/plug.vim ]]; then
+    curl -fsSLo .local/share/nvim/site/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim ||
+      warn "Failed to download vim-plug."
+  fi
+  PATH="${HOME}/.local/share/mise/shims:${PATH}" nvim --headless +'PlugInstall --sync' +qall ||
+    warn "Failed to install Neovim plugins."
 
   missing=""
   for cmd in ${REQUIRED_CMDS}; do

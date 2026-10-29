@@ -1,14 +1,15 @@
 # Nimo's rc Files
 
-My configuration files for zsh, tmux and tig, tested on Ubuntu.
+My configuration files for zsh, Neovim, tmux and tig, tested on Ubuntu.
 
 | Tool | Config | Notes |
 | --- | --- | --- |
-| zsh | `zshrc`, `zshenv` | oh-my-zsh, fzf helpers, zoxide |
-| Prompt | `starship.toml` | starship by default, Powerlevel10k (`p10k.zsh`) as fallback |
-| Versions | `mise.toml` | Node 22, Neovim, starship, delta, ripgrep, bat, zoxide and global CLI tools via mise (pinned); Python stays on the system version |
-| tmux | `tmux.conf.local` | on top of [oh-my-tmux](https://github.com/gpakosz/.tmux) |
-| tig | `tigrc` | vim movement, OSC 52 copy, delta view |
+| zsh | `zsh/` | oh-my-zsh, fzf helpers, zoxide |
+| Prompt | `starship/` | starship; falls back to oh-my-zsh's robbyrussell theme if starship is missing |
+| Versions | `mise/` | Node 22, Neovim, starship, delta, ripgrep, bat, zoxide and global CLI tools via mise (pinned); Python stays on the system version |
+| Neovim | `nvim/` | vim-plug, coc.nvim, fzf, airline; merged from the old nimo1491/vimrc |
+| tmux | `tmux/` | on top of [oh-my-tmux](https://github.com/gpakosz/.tmux) |
+| tig | `tig/` | vim movement, OSC 52 copy, delta view |
 
 ## Requirements
 
@@ -17,7 +18,7 @@ Install these first (Ubuntu):
     sudo apt install git curl zsh tmux tig tree pipx
 
 Neovim, starship, delta, ripgrep, bat and zoxide are installed by mise at the
-versions pinned in `mise.toml`. It is still worth installing the apt packages
+versions pinned in `mise/config.toml`. It is still worth installing the apt packages
 `neovim ripgrep bat git-delta zoxide` as fallbacks for contexts without mise
 (sudo, other users, tools that run git without your shell). `pipx` is needed by
 mise to install the `pipx:` tools.
@@ -29,9 +30,10 @@ mise to install the `pipx:` tools.
 This clones the repo to `~/.rc` together with oh-my-zsh, oh-my-tmux and fzf, then
 runs `install.sh`, which:
 
-- links the rc files into `~` (existing files are backed up as `*.old`)
-- links `starship.toml` and `mise.toml` into `~/.config`
+- links the config files into `~` and `~/.config` as listed in `LINKS`
+  (existing files are backed up as `*.old`)
 - installs mise into `~/.local/bin` and runs `mise install`
+- installs the Neovim plugins
 - warns about any missing commands
 
 To re-run the setup on an existing clone, run `~/.rc/install.sh`.
@@ -43,6 +45,9 @@ To re-run the setup on an existing clone, run `~/.rc/install.sh`.
       git -C ~/.rc config user.name "Nimo Hsieh"
       git -C ~/.rc config user.email "nimo1491@gmail.com"
 
+- Optionally install clangd for C/C++ completion in Neovim
+  (`sudo apt install clangd universal-ctags`). coc.nvim installs its extensions
+  on the first start.
 - Start a new shell with `exec zsh`, or `chsh -s $(which zsh)` if zsh is not
   the login shell yet.
 
@@ -62,9 +67,6 @@ To re-run the setup on an existing clone, run `~/.rc/install.sh`.
 | `fs` | switch tmux sessions |
 | `venv <name>` | activate a virtualenv in `~/.venvs/<name>` |
 | `tiga` | `tig --all` |
-
-To use Powerlevel10k instead of starship for a shell, start it with
-`RC_PROMPT=p10k zsh`.
 
 ### mise
 
@@ -86,3 +88,35 @@ On top of the default key bindings:
 | `V` | show the commit with delta (main view) |
 | `T` | toggle the revision graph (main view) |
 | `D` | cycle the date format |
+
+### Neovim
+
+The leader key is `,`.
+
+| Key | Description |
+| --- | --- |
+| `,p` | find files (fzf) |
+| `,<Enter>` | switch buffers |
+| `,ag` / `,Ag` | live ripgrep / ripgrep for the word under the cursor |
+| `,f` | search the word under the cursor with CtrlSF |
+| `,h` | recently opened files |
+| `,e` / `,,e` | toggle NERDTree / reveal the current file |
+| `,t` | toggle Tagbar |
+| `,gd` / `,gi` / `,su` | go to definition / implementation / references (coc) |
+| `K` | show documentation |
+| `s` | EasyMotion jump |
+| `Ctrl-n` | multiple cursors (vim-visual-multi) |
+| `,G` | Goyo distraction-free mode |
+| `,/` | clear search highlighting |
+| `:cd.` | change the window's directory to the current file's |
+| `:w!!` | save with sudo |
+
+Run `:PlugUpdate` to update the plugins and `:CocUpdate` for the coc extensions.
+
+The Neovim config started from ideas in
+[mosky.vim](https://github.com/moskytw/mosky.vim),
+[junegunn/dotfiles](https://github.com/junegunn/dotfiles),
+[ycavatars/vimrc](https://github.com/ycavatars/vimrc),
+[othree/rc](https://github.com/othree/rc),
+[vgod/vimrc](https://github.com/vgod/vimrc) and
+[janus](https://github.com/carlhuda/janus).

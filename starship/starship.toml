@@ -1,7 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Laid out like the previous p10k config: context + dir + git on the first
-# line, prompt char on the second, status/tools on the right. Plain-text
+# Layout: context + dir + git on the first line, prompt char on the second,
+# status/tools on the right. Plain-text
 # symbols only, so no Nerd Font is required.
 
 add_newline = true
