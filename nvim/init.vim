@@ -1,11 +1,11 @@
-" Nimo's vimrc
-" https://github.com/nimo1491/vimrc
+" Nimo's Neovim config
+" https://github.com/nimo1491/rc
 
 
 "---------------------------------------------------
 " vim-plug
 "---------------------------------------------------
-silent! if plug#begin('~/.vim/plugged')
+silent! if plug#begin(stdpath('data') . '/plugged')
     " UI {
         Plug 'Twinside/vim-cuteErrorMarker'
         Plug 'Yggdroot/indentLine'
@@ -31,9 +31,7 @@ silent! if plug#begin('~/.vim/plugged')
         Plug 'tpope/vim-fugitive'
         Plug 'majutsushi/tagbar'
         Plug 'dyng/ctrlsf.vim'
-        if v:version >= 703
-          Plug 'mhinz/vim-signify'
-        endif
+        Plug 'mhinz/vim-signify'
     " }
 
     " Syntax {
@@ -59,9 +57,7 @@ silent! if plug#begin('~/.vim/plugged')
     " }
 
     " Completion {
-        if v:version >= 800
-            Plug 'neoclide/coc.nvim', {'branch': 'release'}
-        endif
+        Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " }
 
     " junegunn {
@@ -94,9 +90,6 @@ endif
 " Encoding settings {
     set fencs=utf-8,big5,euc-jp,utf-bom,iso8859-1
     set fenc=utf-8
-    if !has('nvim')
-        set enc=utf-8 tenc=utf-8
-    endif
 " }
 
 " General Settings {
@@ -133,25 +126,21 @@ endif
     " enable mouse
     set mouse=r
     " always use the clipboard for ALL vim operations
-    if has('nvim')
-        set clipboard+=unnamedplus
-        " Over SSH, copy to the local clipboard via OSC 52 (nvim 0.10+); paste
-        " from the unnamed register since most terminals block OSC 52 reads
-        if has('nvim-0.10') && !empty($SSH_CONNECTION)
-            lua << EOF
-            local osc52 = require('vim.ui.clipboard.osc52')
-            local function paste()
-                return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') }
-            end
-            vim.g.clipboard = {
-                name = 'OSC 52',
-                copy = { ['+'] = osc52.copy('+'), ['*'] = osc52.copy('*') },
-                paste = { ['+'] = paste, ['*'] = paste },
-            }
+    set clipboard+=unnamedplus
+    " Over SSH, copy to the local clipboard via OSC 52 (nvim 0.10+); paste
+    " from the unnamed register since most terminals block OSC 52 reads
+    if has('nvim-0.10') && !empty($SSH_CONNECTION)
+        lua << EOF
+        local osc52 = require('vim.ui.clipboard.osc52')
+        local function paste()
+            return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') }
+        end
+        vim.g.clipboard = {
+            name = 'OSC 52',
+            copy = { ['+'] = osc52.copy('+'), ['*'] = osc52.copy('*') },
+            paste = { ['+'] = paste, ['*'] = paste },
+        }
 EOF
-        endif
-    else
-        set clipboard+=unnamed
     endif
     " seperate list of screen columns
     " set colorcolumn=80
@@ -504,11 +493,7 @@ EOF
     " }
 
     " fzf {
-        if has('nvim')
-            let $FZF_DEFAULT_OPTS .= ' --inline-info --bind ctrl-f:page-down,ctrl-b:page-up'
-        else
-            let $FZF_DEFAULT_OPTS .= ' --bind ctrl-f:page-down,ctrl-b:page-up'
-        endif
+        let $FZF_DEFAULT_OPTS .= ' --inline-info --bind ctrl-f:page-down,ctrl-b:page-up'
 
         " All files
         command! -nargs=? -complete=dir AF
