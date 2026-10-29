@@ -2,12 +2,14 @@
 #
 # Perform installation process
 
-declare -r RC_HOME=$(pwd)
+declare -r RC_HOME=$(cd "$(dirname "$0")" && pwd)
 declare -r OH_MY_ZSH_DIR=~/.oh-my-zsh
 declare -r TMUX_DIR=~/.tmux
 declare -r FZF_DIR=~/.fzf
 declare -r LOCAL_BIN=~/.local/bin
 RC_FILES="zshrc zshenv p10k.zsh tigrc tmux.conf.local"
+# Commands the configs rely on but this script does not install
+REQUIRED_CMDS="zsh tmux tig nvim rg bat delta zoxide tree pipx"
 
 warn() {
   echo "$1" >&2
@@ -21,13 +23,15 @@ die() {
 [[ -z "${RC_HOME}" ]] && die "Failed to get rc root path."
 
 (
-  cd ..
+  cd ~ || die "Failed to change to the home directory."
 
   # Link all rc files
   for target in ${RC_FILES}; do
     if [[ -e ".${target}" ]] && ! [[ -L ".${target}" ]]; then
-      mv ".${target}" ".${target}.old"
-      echo "Backup old files."
+      backup=".${target}.old"
+      [[ -e "${backup}" ]] && backup="${backup}.$(date +%Y%m%d%H%M%S)"
+      mv ".${target}" "${backup}"
+      echo "Backup ~/.${target} to ~/${backup}."
     fi
     if ! [[ -L ".${target}" ]]; then
       ln -s "${RC_HOME}/${target}" ".${target}"
@@ -54,7 +58,11 @@ die() {
   # Install fzf
   ${FZF_DIR}/install --all
 
-  command -v zoxide > /dev/null || warn "zoxide is not installed. Please install it (e.g. sudo apt install zoxide)."
+  missing=""
+  for cmd in ${REQUIRED_CMDS}; do
+    command -v "${cmd}" > /dev/null || missing="${missing} ${cmd}"
+  done
+  [[ -n "${missing}" ]] && warn "Missing commands:${missing}. See README.md for the packages to install."
 
   # Install starship and mise into ~/.local/bin (no sudo needed)
   mkdir -p "${LOCAL_BIN}"
@@ -67,7 +75,7 @@ die() {
       warn "Failed to install mise."
   fi
 
-  # Install the tools listed in mise.toml
+  # Install the tools listed in mise.toml (pipx:* tools need pipx)
   if [[ -x "${LOCAL_BIN}"/mise ]]; then
     "${LOCAL_BIN}"/mise install || warn "Failed to run mise install."
   elif command -v mise > /dev/null; then
