@@ -1,6 +1,14 @@
 # Global mise config, linked to ~/.config/mise/config.toml by install.sh
 [tools]
 node = "22"
+neovim = "0.12"
+# Tools the configs in this repo rely on; pinned so configs and versions match.
+# apt keeps its own copies of rg, bat, delta and zoxide for non-mise contexts.
+starship = "1.27"
+delta = "0.20"
+ripgrep = "15"
+bat = "0.26"
+zoxide = "0.10"
 # Global CLI tools
 "npm:@playwright/cli" = "0.1.22"
 "pipx:tox" = "latest"

@@ -6,7 +6,7 @@ My configuration files for zsh, tmux and tig, tested on Ubuntu.
 | --- | --- | --- |
 | zsh | `zshrc`, `zshenv` | oh-my-zsh, fzf helpers, zoxide |
 | Prompt | `starship.toml` | starship by default, Powerlevel10k (`p10k.zsh`) as fallback |
-| Versions | `mise.toml` | Node 22 and global CLI tools via mise; Python stays on the system version |
+| Versions | `mise.toml` | Node 22, Neovim, starship, delta, ripgrep, bat, zoxide and global CLI tools via mise (pinned); Python stays on the system version |
 | tmux | `tmux.conf.local` | on top of [oh-my-tmux](https://github.com/gpakosz/.tmux) |
 | tig | `tigrc` | vim movement, OSC 52 copy, delta view |
 
@@ -14,9 +14,13 @@ My configuration files for zsh, tmux and tig, tested on Ubuntu.
 
 Install these first (Ubuntu):
 
-    sudo apt install git curl zsh tmux tig neovim ripgrep bat git-delta zoxide tree pipx
+    sudo apt install git curl zsh tmux tig tree pipx
 
-`pipx` is needed by mise to install the `pipx:` tools in `mise.toml`.
+Neovim, starship, delta, ripgrep, bat and zoxide are installed by mise at the
+versions pinned in `mise.toml`. It is still worth installing the apt packages
+`neovim ripgrep bat git-delta zoxide` as fallbacks for contexts without mise
+(sudo, other users, tools that run git without your shell). `pipx` is needed by
+mise to install the `pipx:` tools.
 
 ## Install
 
@@ -27,8 +31,8 @@ runs `install.sh`, which:
 
 - links the rc files into `~` (existing files are backed up as `*.old`)
 - links `starship.toml` and `mise.toml` into `~/.config`
-- installs starship and mise into `~/.local/bin` and runs `mise install`
-- warns about any missing commands from the list above
+- installs mise into `~/.local/bin` and runs `mise install`
+- warns about any missing commands
 
 To re-run the setup on an existing clone, run `~/.rc/install.sh`.
 
